@@ -3,7 +3,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile (
 	NAME => 'POE::Component::Client::UserAgent',
 	VERSION_FROM => 'UserAgent.pm',
-	AUTHOR => 'Kirill Shuykin <http://www.en-directo.net/mail/kirill.html>',
+	AUTHOR => 'Rocco Caputo <troc+pcua@pobox.com>',
 	ABSTRACT => 'LWP and LWP::Parallel based POE component.',
 	PM => { 'UserAgent.pm' => '$(INST_LIBDIR)/UserAgent.pm' },
 	PREREQ_PM => {

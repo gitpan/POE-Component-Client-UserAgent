@@ -4,7 +4,7 @@ use POE;
 use LWP::Parallel;
 
 @POE::Component::Client::UserAgent::ISA = 'LWP::Parallel::UserAgent';
-$POE::Component::Client::UserAgent::VERSION = '0.03';
+$POE::Component::Client::UserAgent::VERSION = '0.04';
 
 my $debuglevel = 0;
 
@@ -69,7 +69,7 @@ sub _pococ_ua_stop
 sub DESTROY
 {
 	my ($object) = @_;
-	LWP::Debug::trace ("\t$object");
+	LWP::Debug::trace ("$object");
 	warn "$object destroyed\n" if $debuglevel >= 3;
 }
 
@@ -106,7 +106,7 @@ sub _pococ_ua_request
 	my %args = (@args, %$argref);
 	my ($request, $filename, $callback, $chunksize, $redirect) =
 		@args{qw(request filename callback chunksize redirect)};
-	LWP::Debug::trace ("\n\t$object\n\t$request");
+	LWP::Debug::trace ("$object\n\t$request");
 	warn 'Request for ' . $request -> url -> as_string . "\n" if $debuglevel >= 3;
 	my $register = $object -> register ($request,
 		$filename || $callback, $chunksize, $redirect);
@@ -120,7 +120,7 @@ sub _pococ_ua_set_timeout
 	my $timeout = $object -> timeout;
 	return unless defined $timeout;
 	my $alarm_id = $poe_kernel -> delay_set (timeout => $timeout, $entry);
-	LWP::Debug::trace ("\n\t$object\n\t$entry\n\tTimeout: $timeout\n\tAlarm ID: "
+	LWP::Debug::trace ("$object\n\t$entry\n\tTimeout: $timeout\n\tAlarm ID: "
 		. (defined $alarm_id ? $alarm_id : '[undef]'));
 	$entry -> alarm_id ($alarm_id);
 	$entry -> alarm_time (defined $alarm_id ? time() + $timeout : undef);
@@ -144,7 +144,7 @@ sub _pococ_ua_adjust_timeout
 #	my $previous_alarm_time = $entry -> alarm_time;
 #	my $new_alarm_time = time() + $timeout;
 #	return if $new_alarm_time == $previous_alarm_time;
-#	LWP::Debug::trace ("\n\t$object\n\t$entry\n\tTimeout: $timeout\n"
+#	LWP::Debug::trace ("$object\n\t$entry\n\tTimeout: $timeout\n"
 #		. "\tAlarm ID: $alarm_id\n\tPrevious Alarm Time: $previous_alarm_time\n"
 #		. "\tNew Alarm Time: $new_alarm_time");
 #	$poe_kernel -> alarm_adjust ($alarm_id, $new_alarm_time - $previous_alarm_time);
@@ -157,7 +157,7 @@ sub _pococ_ua_remove_timeout
 	my ($object, $entry) = @_;
 	my $alarm_id = $entry -> alarm_id;
 	return unless defined $alarm_id;
-	LWP::Debug::trace ("\n\t$object\n\t$entry\n\tAlarm ID: $alarm_id");
+	LWP::Debug::trace ("$object\n\t$entry\n\tAlarm ID: $alarm_id");
 	$poe_kernel -> alarm_remove ($alarm_id);
 	$entry -> alarm_id (undef);
 	$entry -> alarm_time (undef);
@@ -166,7 +166,7 @@ sub _pococ_ua_remove_timeout
 sub _connect
 {
 	my ($object, $entry) = @_;
-	LWP::Debug::trace ("\n\t$object\n\t$entry\n\t" . $entry -> request -> url);
+	LWP::Debug::trace ("$object\n\t$entry\n\t" . $entry -> request -> url);
 	warn 'Connecting ' . $entry -> request -> url -> as_string . "\n"
 		if $debuglevel >= 3;
 	my $result = $object -> SUPER::_connect ($entry);
@@ -178,7 +178,7 @@ sub _connect
 sub _add_out_socket
 {
 	my ($object, $socket) = @_;
-	LWP::Debug::trace ("\n\t$object\n\t$socket");
+	LWP::Debug::trace ("$object\n\t$socket");
 	$poe_kernel -> select_write ($socket => 'write');
 	$poe_kernel -> select_expedite ($socket => 'error');
 }
@@ -186,7 +186,7 @@ sub _add_out_socket
 sub _add_in_socket
 {
 	my ($object, $socket) = @_;
-	LWP::Debug::trace ("\n\t$object\n\t$socket");
+	LWP::Debug::trace ("$object\n\t$socket");
 	$poe_kernel -> select_read ($socket => 'read');
 	$poe_kernel -> select_expedite ($socket => 'error');
 }
@@ -194,7 +194,7 @@ sub _add_in_socket
 sub _remove_out_socket
 {
 	my ($object, $socket) = @_;
-	LWP::Debug::trace ("\n\t$object\n\t$socket");
+	LWP::Debug::trace ("$object\n\t$socket");
 	$poe_kernel -> select_write ($socket);
 	$poe_kernel -> select_expedite ($socket);
 }
@@ -202,7 +202,7 @@ sub _remove_out_socket
 sub _remove_in_socket
 {
 	my ($object, $socket) = @_;
-	LWP::Debug::trace ("\n\t$object\n\t$socket");
+	LWP::Debug::trace ("$object\n\t$socket");
 	$poe_kernel -> select_read ($socket);
 	$poe_kernel -> select_expedite ($socket);
 }
@@ -210,7 +210,7 @@ sub _remove_in_socket
 sub _remove_all_sockets
 {
 	my ($object) = @_;
-	LWP::Debug::trace ("\n\t$object");
+	LWP::Debug::trace ("$object");
 	my ($socket, $entry);
 	$object -> _remove_entry_sockets ($entry)
 		while ($socket, $entry) = each %{$$object{entries_by_sockets}};
@@ -220,7 +220,7 @@ sub _remove_all_sockets
 sub _remove_entry_sockets
 {
 	my ($object, $entry) = @_;
-	LWP::Debug::trace ("\n\t$object\n\t$entry");
+	LWP::Debug::trace ("$object\n\t$entry");
 	my $socket = $entry -> cmd_socket;
 	if ( defined $socket )
 	{
@@ -239,7 +239,7 @@ sub _pococ_ua_write
 {
 	my ($object, $socket) = @_[OBJECT, ARG0];
 	my $entry = $$object{entries_by_sockets}{$socket};
-	LWP::Debug::trace ("\n\t$object\n\t$socket\n\t$entry\n\t"
+	LWP::Debug::trace ("$object\n\t$socket\n\t$entry\n\t"
 		. $entry -> request -> url);
 	warn 'Writing ' . $entry -> request -> url -> as_string . "\n"
 		if $debuglevel >= 3;
@@ -251,7 +251,7 @@ sub _pococ_ua_read
 {
 	my ($object, $socket) = @_[OBJECT, ARG0];
 	my $entry = $$object{entries_by_sockets}{$socket};
-	LWP::Debug::trace ("\n\t$object\n\t$socket\n\t$entry\n\t"
+	LWP::Debug::trace ("$object\n\t$socket\n\t$entry\n\t"
 		. $entry -> request -> url);
 	warn 'Reading ' . $entry -> request -> url -> as_string . "\n"
 		if $debuglevel >= 3;
@@ -264,7 +264,7 @@ sub _pococ_ua_error
 	my ($object, $kernel, $socket) = @_[OBJECT, KERNEL, ARG0];
 	my $entry = $$object{entries_by_sockets}{$socket};
 	my $request = $entry -> request;
-	LWP::Debug::trace ("\n\t$object\n\t$kernel\n\t$socket\n\t$entry\n\t$request\n\t"
+	LWP::Debug::trace ("$object\n\t$kernel\n\t$socket\n\t$entry\n\t$request\n\t"
 		. $request -> url);
 	warn 'Error on ' . $request -> url -> as_string . "\n"
 		if $debuglevel >= 3;
@@ -284,7 +284,7 @@ sub _pococ_ua_timeout
 	$entry -> alarm_id (undef);
 	$entry -> alarm_time (undef);
 	my $request = $entry -> request;
-	LWP::Debug::trace ("\n\t$object\n\t$kernel\n\t$entry\n\t$request\n\t"
+	LWP::Debug::trace ("$object\n\t$kernel\n\t$entry\n\t$request\n\t"
 		. $request -> url);
 	warn 'Timeout on ' . $request -> url -> as_string . "\n"
 		if $debuglevel >= 3;
@@ -303,7 +303,18 @@ sub _pococ_ua_postback
 	my ($object, $request, $response, $entry) = @_;
 	$object -> _pococ_ua_remove_timeout ($entry);
 	$entry -> postback -> ($request, $response, $entry);
-	return if $response -> is_redirect and $entry -> redirect_ok;
+	if ( $entry -> redirect_ok )
+	{
+		# We need to skip cleanup if the response is a redirect.
+		# See LWP::Parallel::UserAgent::handle_response for details.
+		my $code = $response -> code;
+		if ( $code == HTTP::Status::RC_MOVED_PERMANENTLY
+			or $code == HTTP::Status::RC_MOVED_TEMPORARILY )
+		{
+			$code = $response -> header ('Client-Warning');
+			return unless defined ($code) and $code eq 'Redirect loop detected';
+		}
+	}
 	$object -> discard_entry ($entry);
 	# if the entry doesn't get discarded for whatever reason, the postback
 	# may create a circular reference, depending on what the user passed
@@ -314,7 +325,7 @@ sub _pococ_ua_postback
 sub on_return
 {
 	my ($object, $request, $response, $entry) = @_;
-	LWP::Debug::trace ("\n\t$object\n\t$request\n\t$response\n\t$entry\n\t" .
+	LWP::Debug::trace ("$object\n\t$request\n\t$response\n\t$entry\n\t" .
 		join "\n\t", $request -> url -> as_string,
 		$response -> code, $response -> message);
 	warn 'Response returned ' . $request -> url -> as_string . "\n"
@@ -326,7 +337,7 @@ sub on_return
 sub on_failure
 {
 	my ($object, $request, $response, $entry) = @_;
-	LWP::Debug::trace ("\n\t$object\n\t$request\n\t$response\n\t$entry\n\t" .
+	LWP::Debug::trace ("$object\n\t$request\n\t$response\n\t$entry\n\t" .
 		join "\n\t", $request -> url -> as_string,
 		$response -> code, $response -> message);
 	warn 'Request failed ' . $request -> url -> as_string . "\n"
@@ -348,6 +359,16 @@ sub debug
 	return unless $debuglevel > 0 and defined $filename;
 	close STDERR;
 	open STDERR, ">$filename";
+}
+
+no warnings 'redefine';
+
+sub LWP::Debug::_log
+{
+	my $msg = shift;
+	$msg .= "\n" unless $msg =~ /\n$/;
+	my $sub = (caller (2)) [3];
+	warn "$sub\n\t$msg";
 }
 
 1;
@@ -386,7 +407,7 @@ C<POE::Component::Client::UserAgent> is based on C<LWP> and C<LWP::Parallel>.
 It lets other tasks run while making a request to an Internet server
 and waiting for response, and it lets several requests run in parallel.
 
-C<PoCoC::UserAgent> session is created using C<spawn> or C<new> method.
+C<PoCoCl::UserAgent> session is created using C<spawn> or C<new> method.
 The two methods are equivalent. They take a few named parameters:
 
 =over 2
@@ -442,7 +463,7 @@ The C<delay> parameter is currently not used.
 
 =back
 
-Client sessions communicate asynchronously with C<PoCoC::UserAgent>
+Client sessions communicate asynchronously with C<PoCoCl::UserAgent>
 by using an alias and posting events to the component. When a
 request is complete, the component posts back a response event
 using a postback the client provided when it made the request.
@@ -564,7 +585,7 @@ until it returns all responses to any pending requests.
     # this is the first event to arrive
     sub _start
     {
-        # create the PoCoC::UserAgent session
+        # create the PoCoCl::UserAgent session
         POE::Component::Client::UserAgent -> new;
         # hand it our request
         $_[KERNEL] -> post (
@@ -578,7 +599,7 @@ until it returns all responses to any pending requests.
             }
         );
         # Once we are done posting requests, we can post a shutdown event
-        # to the PoCoC::UserAgent session. Responses will still be returned.
+        # to the PoCoCl::UserAgent session. Responses will still be returned.
         $_[KERNEL] -> post (useragent => 'shutdown');
     }
 
@@ -590,11 +611,11 @@ until it returns all responses to any pending requests.
     {
         # @{$_[ARG0]} is the list we passed to postback()
         # after the event name, empty in this example
-        # @{$_[ARG1]} is the list PoCoC::UserAgent is passing back to us
+        # @{$_[ARG1]} is the list PoCoCl::UserAgent is passing back to us
         my ($request, $response, $entry) = @{$_[ARG1]};
         print "Successful response arrived!\n"
             if $response -> is_success;
-        print "PoCoC::UserAgent is automatically redirecting the request\n"
+        print "PoCoCl::UserAgent is automatically redirecting the request\n"
             if $response -> is_redirect;
         print "The request failed.\n"
             if $response -> is_error;
@@ -602,14 +623,14 @@ until it returns all responses to any pending requests.
 
 =head1 DEBUGGING
 
-C<PoCoC::UserAgent> has a class method called C<debug>. It can also be
+C<PoCoCl::UserAgent> has a class method called C<debug>. It can also be
 called as an object method, but the settings will affect all instances.
 
 The method accepts two parameters.
 The first parameter is the debug level, ranging from 0 for no debug
 information to 9 for when you want to fill up your disk quota real quick.
 
-Levels 3 and up enable C<PoCoC::UserAgent>'s debugging output.
+Levels 3 and up enable C<PoCoCl::UserAgent>'s debugging output.
 Levels 5 and up additionally enable C<LWP>'s C<+debug> debugging option.
 Levels 7 and up additionally enable C<LWP>'s C<+trace> debugging option.
 Levels 9 and up additionally enable C<LWP>'s C<+conns> debugging option.
@@ -641,7 +662,7 @@ http://www.inf.ethz.ch/~langhein/ParallelUA/
 
 =back
 
-Also see the test programs in the C<PoCoC::UserAgent> distribution
+Also see the test programs in the C<PoCoCl::UserAgent> distribution
 for examples of its usage.
 
 =head1 BUGS
@@ -662,17 +683,12 @@ The RobotUA variety of UserAgent is not yet implemented.
 
 =head1 AVAILABILITY
 
-The C<PoCoC::UserAgent> distribution is available on the web at
-http://www.en-directo.net/poe/
-
-I am also planning to upload it to the CPAN.
-
-The most recent version of this documentation is available at
-http://www.en-directo.net/poe/useragent.html
+The C<PoCoCl::UserAgent> distribution is available on CPAN:
+http://search.cpan.org/search?dist=POE-Component-Client-UserAgent
 
 =head1 AUTHOR AND COPYRIGHT
 
-Copyright 2001 Kirill Shuykin <http://www.en-directo.net/mail/kirill.html>
+Copyright 2001-2002 Rocco Caputo <troc+pcua@pobox.com>
 
 This library is free software; you can redistribute it
 and/or modify it under the same terms as Perl itself.

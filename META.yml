@@ -1,0 +1,12 @@
+# http://module-build.sourceforge.net/META-spec.html
+#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
+name:         POE-Component-Client-UserAgent
+version:      0.06
+version_from: UserAgent.pm
+installdirs:  site
+requires:
+    LWP::Parallel:                 2.51
+    POE:                           0.1402
+
+distribution_type: module
+generated_by: ExtUtils::MakeMaker version 6.17

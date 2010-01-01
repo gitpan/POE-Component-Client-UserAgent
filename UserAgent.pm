@@ -4,7 +4,7 @@ use POE;
 use LWP::Parallel;
 
 @POE::Component::Client::UserAgent::ISA = 'LWP::Parallel::UserAgent';
-$POE::Component::Client::UserAgent::VERSION = '0.06';
+$POE::Component::Client::UserAgent::VERSION = '0.07';
 
 my $debuglevel = 0;
 
@@ -56,7 +56,7 @@ sub _pococ_ua_start
 	$$heap{alias} = $alias;
 	$object -> $_ ($$args{$_}) for grep exists ($$args{$_}),
 		qw(agent from timeout redirect duplicates in_order remember_failures
-			proxy cookie_jar parse_head max_size max_hosts max_req delay);
+		env_proxy proxy cookie_jar parse_head max_size max_hosts max_req delay);
 	$kernel->sig(INT => 'sigint');
 	$kernel->sig(BREAK => 'sigint');
 }
@@ -315,8 +315,11 @@ sub _pococ_ua_postback
 		# See LWP::Parallel::UserAgent::handle_response for details.
 		my $code = $response -> code;
 		if ( $code == HTTP::Status::RC_MOVED_PERMANENTLY
-			or $code == HTTP::Status::RC_MOVED_TEMPORARILY )
-		{
+				or $code == HTTP::Status::RC_MOVED_TEMPORARILY
+				or $code == HTTP::Status::RC_FOUND
+				or $code == HTTP::Status::RC_SEE_OTHER
+				or $code == HTTP::Status::RC_TEMPORARY_REDIRECT
+		) {
 			$code = $response -> header ('Client-Warning');
 			return unless defined ($code) and $code eq 'Redirect loop detected';
 		}
@@ -408,6 +411,13 @@ user agent
     }
 
 =head1 DESCRIPTION
+
+B<Note:> C<POE::Component::Client::UserAgent> dependencies frequently
+have problems installing.  This module is difficult to maintain when
+the latest dependencies don't work.  As a result, we prefer to
+maintain and recommend L<POE::Component::Client::HTTP>.  That client
+has fewer, more actively maintained dependencies, and it tends to work
+better.
 
 C<POE::Component::Client::UserAgent> is based on C<LWP> and C<LWP::Parallel>.
 It lets other tasks run while making a request to an Internet server
@@ -656,15 +666,15 @@ The POE output will also go to the log file you specify.
 
 =item POE
 
-http://poe.perl.org/
+L<POE> or http://poe.perl.org/
 
 =item LWP
 
-http://www.linpro.no/lwp/
+L<LWP> or http://www.linpro.no/lwp/
 
 =item LWP::Parallel
 
-http://www.inf.ethz.ch/~langhein/ParallelUA/
+L<LWP::Parallel> or http://www.inf.ethz.ch/~langhein/ParallelUA/
 
 =back
 
@@ -687,14 +697,26 @@ friendly.
 
 The RobotUA variety of UserAgent is not yet implemented.
 
-=head1 AVAILABILITY
+L<LWP::Parallel> often cannot install due to feature mismatches with
+recent versions of LWP.  This interferes with our ability to maintain
+and test this module.  Please see L<POE::Component::Client::HTTP>,
+which does not rely on LWP::Parallel.
 
-The C<PoCoCl::UserAgent> distribution is available on CPAN:
-http://search.cpan.org/search?dist=POE-Component-Client-UserAgent
+=head1 BUG TRACKER
+
+https://rt.cpan.org/Dist/Display.html?Status=Active&Queue=POE-Component-Client-UserAgent
+
+=head1 REPOSITORY
+
+http://thirdlobe.com/svn/poco-client-ua/
+
+=head1 OTHER RESOURCES
+
+http://search.cpan.org/dist/POE-Component-Client-UserAgent/
 
 =head1 AUTHOR AND COPYRIGHT
 
-Copyright 2001-2002 Rocco Caputo <troc+pcua@pobox.com>
+Copyright 2001-2010 Rocco Caputo.
 
 This library is free software; you can redistribute it
 and/or modify it under the same terms as Perl itself.

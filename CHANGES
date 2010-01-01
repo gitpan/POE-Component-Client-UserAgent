@@ -1,0 +1,40 @@
+=================================
+2010-01-01T21:59:30.717013Z v0_07
+=================================
+
+  2010-01-01 21:59:03 (r16) by rcaputo; README M; UserAgent.pm M
+
+    Prepare for a new release. 
+
+  2010-01-01 21:40:14 (r15) by rcaputo; UserAgent.pm M
+
+    [rt.cpan.org 24478] Applied Phonohawk's patch to handle more redirect
+    types. 
+
+  2010-01-01 21:36:00 (r14) by rcaputo
+  t/02multi.t M; t/03chunks.t M; t/01basic.t M; UserAgent.pm M
+
+    [rt.cpan.org 31287] Fix http_proxy environment variable support,
+    contributed by Georg Moritz. Untested! LWP::Parallel will not
+    install. My LWP is too new for it. 
+
+  2009-07-27 04:58:17 (r13) by rcaputo; Makefile.PL M; UserAgent.pm M
+
+    Added a machine-readable repository directory to the distribution.
+    Documented the bug tracker, repository, and other resource URLs. 
+
+  2005-06-21 18:36:42 (r12) by rcaputo
+  CHANGES.OLD A; MANIFEST M; Makefile.PL M; Changes D
+
+    Moved the hand-written Changes to CHANGES.OLD, making room for the
+    automated CHANGES at "make dist" time. Speaking of distributions, I
+    removed META.yml from the MANIFEST since MakeMaker makes one. I also
+    added svn-log.perl to Makefile.PL to auto-generate CHANGES. 
+
+  2005-05-05 05:36:16 (r11) by rcaputo; MANIFEST M
+
+    Add META.yml to the MANIFEST. 
+
+==============
+End of Excerpt
+==============

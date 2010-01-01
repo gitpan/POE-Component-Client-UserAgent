@@ -1,6 +1,8 @@
-Changes
-Makefile.PL
+# $Id: MANIFEST 12 2005-06-21 18:36:42Z rcaputo $
+CHANGES
+CHANGES.OLD
 MANIFEST
+Makefile.PL
 README
 UserAgent.pm
 t/01basic.t

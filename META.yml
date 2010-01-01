@@ -1,12 +1,26 @@
-# http://module-build.sourceforge.net/META-spec.html
-#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
-name:         POE-Component-Client-UserAgent
-version:      0.06
-version_from: UserAgent.pm
-installdirs:  site
+--- #YAML:1.0
+name:               POE-Component-Client-UserAgent
+version:            0.07
+abstract:           LWP and LWP::Parallel based POE component.
+author:
+    - Rocco Caputo <rcaputo@cpan.org>
+license:            unknown
+distribution_type:  module
+configure_requires:
+    ExtUtils::MakeMaker:  0
+build_requires:
+    ExtUtils::MakeMaker:  0
 requires:
-    LWP::Parallel:                 2.51
-    POE:                           0.1402
-
-distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.17
+    LWP::Parallel:  2.51
+    POE:            0.31
+resources:
+    license:     http://dev.perl.org/licenses/
+    repository:  http://thirdlobe.com/svn/poco-client-ua/trunk
+no_index:
+    directory:
+        - t
+        - inc
+generated_by:       ExtUtils::MakeMaker version 6.54
+meta-spec:
+    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
+    version:  1.4

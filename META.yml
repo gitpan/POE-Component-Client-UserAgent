@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               POE-Component-Client-UserAgent
-version:            0.07
+version:            0.08
 abstract:           LWP and LWP::Parallel based POE component.
 author:
     - Rocco Caputo <rcaputo@cpan.org>
@@ -15,7 +15,7 @@ requires:
     POE:            0.31
 resources:
     license:     http://dev.perl.org/licenses/
-    repository:  http://thirdlobe.com/svn/poco-client-ua/trunk
+    repository:  http://github.com/rcaputo/poe-component-client-useragent
 no_index:
     directory:
         - t
